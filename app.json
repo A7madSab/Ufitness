@@ -4,6 +4,7 @@
     "slug": "Ufitness",
     "privacy": "public",
     "sdkVersion": "34.0.0",
+    "description": "The best triathlon training app in the world.",
     "platforms": [
       "ios",
       "android",
@@ -24,7 +25,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nano.ufitness"
+    },
+    "android": {
+      "package": "com.nano.ufitness"
     }
   }
 }

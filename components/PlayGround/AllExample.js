@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, Switch, FlatList, Alert, Text, TextInput, Modal, KeyboardAvoidingView, StyleSheet, TouchableHighlight, ActivityIndicator, Image, Picker } from "react-native"
-
+import { View, ImageEditor, Image, TouchableOpacity, Animated, Switch, FlatList, Alert, Text, TextInput, Modal, KeyboardAvoidingView, StyleSheet, TouchableHighlight, ActivityIndicator, Image, Picker } from "react-native"
+import * as ImagePicker from 'expo-image-picker'
 
 const Reviews = [
     {
@@ -76,7 +76,6 @@ const Reviews = [
     },
 ]
 
-
 export const Review = ({ name, text }) => (
     <View>
         <Text>{name}</Text>
@@ -86,104 +85,132 @@ export const Review = ({ name, text }) => (
 )
 export default class SwitchDemo extends React.Component {
     state = {
-        switch: false,
-        input: 'Ahmad Sabry',
-        language: "Java",
-        modalVisible: false,
+        opacity: new Animated.Value(0),
+        width: new Animated.Value(0),
+        hight: new Animated.Value(0),
     }
-    handleToggleSwitch = () => {
-        this.setState((state) => ({
-            switch: !state.switch
-        }))
+    componentDidMount() {
+        const { opacity, width, hight } = this.state
+
+        Animated.timing(opacity, { toValue: 1, duration: 1000 })
+            .start()
+        Animated.spring(width, { toValue: 300, speed: 5 })
+            .start()
+        Animated.timing(hight, { toValue: 300, speed: 5 })
+            .start()
     }
-    setModalVisible(visible) {
-        this.setState({ modalVisible: visible });
-    }
-    generateKey = () => {
-        return Math.random().toString() + (new Date).toString()
-    }
-    renderItem = ({ item }) => (
-        <Review key={this.generateKey()} name={item.name} text={item.text} />
-    )
     render() {
+        const { opacity, width, hight } = this.state
+
         return (
-            <KeyboardAvoidingView behavior="padding">
-
-                <Image source={require("../../assets/icon.png")} />
-                {/** <Image source={{ uri: '' }} /> */}
-
-                <Text>Activity Indicator</Text>
-                <View style={[styles.container, styles.horizontal]}>
-                    <ActivityIndicator size="large" color="#0000ff" />
-                    <ActivityIndicator size="small" color="#00ff00" />
-                </View>
-
-                <Text>Switch Example</Text>
-                <Switch
-                    value={this.state.switch}
-                    onValueChange={this.handleToggleSwitch}
-                />
-
-                <Text>Picker Example</Text>
-                <Picker
-                    selectedValue={this.state.language}
-                    style={{ height: 50, width: 400 }}
-                    onValueChange={itemValue =>
-                        this.setState({ language: itemValue })
-                    }>
-                    <Picker.Item label="Java" value="java" />
-                    <Picker.Item label="JavaScript" value="js" />
-                </Picker>
-
-                <View style={{ marginTop: 22 }}>
-
-                    <Modal
-                        animationType="slide"
-                        transparent={false}
-                        visible={this.state.modalVisible}
-                        onRequestClose={() => {
-                            Alert.alert('Modal has been closed.');
-                        }}>
-                        <View style={{ marginTop: 22 }}>
-                            <View>
-                                <Text>Hello World!</Text>
-
-                                <TouchableHighlight
-                                    onPress={() => {
-                                        this.setModalVisible(!this.state.modalVisible);
-                                    }}>
-                                    <Text>Hide Modal</Text>
-                                </TouchableHighlight>
-                            </View>
-                        </View>
-                    </Modal>
-                    <FlatList data={Reviews} renderItem={this.renderItem} />
-                    <TouchableHighlight
-                        onPress={() => {
-                            this.setModalVisible(true);
-                        }}>
-                        <Text>Show Modal</Text>
-                    </TouchableHighlight>
-                </View>
-                {
-                    this.state.switch && <TextInput
-                        value={this.state.input}
-                        onChangeText={(input => this.setState(() => ({ input })))}
-                    />
-                }
-            </KeyboardAvoidingView>
+            <View style={[styles.container, opacity, width, hight]}>
+                <Animated.Image style={styles.img} source={{ uri: require('../../assets/icon.png') }} />
+            </View>
         )
     }
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center'
+        alignItems: "center",
+        justifyContent: "center"
     },
     horizontal: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         padding: 10
+    },
+    img: {
+        width: 120,
+        height: 120
     }
 })
+
+
+// state = {
+//     switch: false,
+//     input: 'Ahmad Sabry',
+//     language: "Java",
+//     modalVisible: false,
+// }
+// handleToggleSwitch = () => {
+//     this.setState((state) => ({
+//         switch: !state.switch
+//     }))
+// }
+// setModalVisible(visible) {
+//     this.setState({ modalVisible: visible });
+// }
+// generateKey = () => {
+//     return Math.random().toString() + (new Date).toString()
+// }
+// renderItem = ({ item }) => (
+//     <Review key={this.generateKey()} name={item.name} text={item.text} />
+// )
+
+
+// <KeyboardAvoidingView behavior="padding">
+
+//     <Image source={require("../../assets/icon.png")} />
+//     {/** <Image source={{ uri: '' }} /> */}
+
+//     <Text>Activity Indicator</Text>
+//     <View style={[styles.container, styles.horizontal]}>
+//         <ActivityIndicator size="large" color="#0000ff" />
+//         <ActivityIndicator size="small" color="#00ff00" />
+//     </View>
+
+//     <Text>Switch Example</Text>
+//     <Switch
+//         value={this.state.switch}
+//         onValueChange={this.handleToggleSwitch}
+//     />
+
+//     <Text>Picker Example</Text>
+//     <Picker
+//         selectedValue={this.state.language}
+//         style={{ height: 50, width: 400 }}
+//         onValueChange={itemValue =>
+//             this.setState({ language: itemValue })
+//         }>
+//         <Picker.Item label="Java" value="java" />
+//         <Picker.Item label="JavaScript" value="js" />
+//     </Picker>
+
+//     <View style={{ marginTop: 22 }}>
+
+//         <Modal
+//             animationType="slide"
+//             transparent={false}
+//             visible={this.state.modalVisible}
+//             onRequestClose={() => {
+//                 Alert.alert('Modal has been closed.');
+//             }}>
+//             <View style={{ marginTop: 22 }}>
+//                 <View>
+//                     <Text>Hello World!</Text>
+
+//                     <TouchableHighlight
+//                         onPress={() => {
+//                             this.setModalVisible(!this.state.modalVisible);
+//                         }}>
+//                         <Text>Hide Modal</Text>
+//                     </TouchableHighlight>
+//                 </View>
+//             </View>
+//         </Modal>
+//         <FlatList data={Reviews} renderItem={this.renderItem} />
+//         <TouchableHighlight
+//             onPress={() => {
+//                 this.setModalVisible(true);
+//             }}>
+//             <Text>Show Modal</Text>
+//         </TouchableHighlight>
+//     </View>
+//     {
+//         this.state.switch && <TextInput
+//             value={this.state.input}
+//             onChangeText={(input => this.setState(() => ({ input })))}
+//         />
+//     }
+// </KeyboardAvoidingView>
